@@ -121,7 +121,7 @@ function Reminders(props) {
   const handleLogout = () => {
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("access_token");
-    window.location = "http://localhost:3000/";
+    window.location = "https://thought-org.vercel.app/";
   };
 
   return (
