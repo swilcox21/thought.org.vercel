@@ -31,6 +31,22 @@
   margin: 10px;
 }
 
+/* REMINDERS STYLES */
+.remindersContainer {
+  width: 60%;
+  margin: auto;
+  text-align: center;
+}
+@media (max-width: 1000px) {
+  .remindersContainer {
+    width: 600px;
+  }
+}
+@media (max-width: 650px) {
+  .remindersContainer {
+    width: 90%;
+  }
+}
 /* border styles */
 .borderNone {
   border: none;
@@ -77,7 +93,11 @@
   width: 20%;
   position: fixed;
   background: rgb(41, 171, 226);
-  background: linear-gradient(90deg, rgba(41, 171, 226, 1) 0%, rgba(127, 201, 237, 0.7) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(41, 171, 226, 1) 0%,
+    rgba(127, 201, 237, 0.7) 100%
+  );
   overflow-x: hidden;
   overflow-y: scroll;
   z-index: 2;
@@ -89,7 +109,11 @@
   padding-top: 70px;
   position: fixed;
   background: rgb(41, 171, 226);
-  background: linear-gradient(90deg, rgba(41, 171, 226, 1) 0%, rgba(127, 201, 237, 0.7) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(41, 171, 226, 1) 0%,
+    rgba(127, 201, 237, 0.7) 100%
+  );
   overflow-x: hidden;
   overflow-y: scroll;
   z-index: 2;

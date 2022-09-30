@@ -8,7 +8,7 @@ import { gapi } from "gapi-script";
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const drfClientId = process.env.REACT_APP_DRF_CLIENT_ID;
 const drfClientSecret = process.env.REACT_APP_DRF_CLIENT_SECRET;
-const baseURL = "http://localhost:8000";
+const baseURL = "https://thoughtorgapi.herokuapp.com";
 const handleGoogleLogin = (response) => {
   axios
     .post(`${baseURL}/auth/convert-token`, {
