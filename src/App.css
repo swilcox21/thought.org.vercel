@@ -7,10 +7,6 @@
   margin: auto;
   max-width: fit-content;
 }
-.logoutButton {
-  /* margin: 300px; */
-  float: right;
-}
 .loginContainer {
   background-color: whitesmoke;
   min-height: 100vh;
@@ -33,16 +29,16 @@
 .logoutButton {
   float: right;
   margin: 5%;
-  width: 71px;
-  height: 30px;
+  /* width: 71px;
+  height: 30px; */
 }
 
 /* REMINDERS STYLES */
 .addnewButton {
   margin: 5%;
   float: left;
-  width: 71px;
-  height: 30px;
+  /* width: 71px;
+  height: 30px; */
 }
 .remindersContainer {
   width: 60%;
@@ -99,14 +95,7 @@
   background-color: rgb(152, 160, 169);
 }
 /* dashBoard */
-.submitButton {
-  width: 30px;
-  height: 30px;
-}
-.submitButtonPhantom {
-  width: 30px;
-  height: 30px;
-}
+
 .dashBoardFolder {
   margin-left: 5vh;
 }
