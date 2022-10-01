@@ -1,21 +1,20 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import axios from "axios";
-import Folder from "./components/folder";
-import Thought from "./components/thought";
-import NewThought from "./components/newThought";
-import Navbar from "./components/navbar2";
-import Dashboard from "./components/dashboard";
-import GoogleLogin from "react-google-login";
-import { gapi } from "gapi-script";
+import React, { useEffect, useState } from 'react';
+import './App.css';
+import axios from 'axios';
+import Folder from './components/folder';
+import Thought from './components/thought';
+import NewThought from './components/newThought';
+import Navbar from './components/navbar2';
+import Dashboard from './components/dashboard';
+import GoogleLogin from 'react-google-login';
+import { gapi } from 'gapi-script';
 
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const drfClientId = process.env.REACT_APP_DRF_CLIENT_ID;
 const drfClientSecret = process.env.REACT_APP_DRF_CLIENT_SECRET;
-const baseURL = "http://localhost:8000";
-const clientId =
-  "1007332775808-q4j6sklcv5oi9stfl9j35etdvorooj9m.apps.googleusercontent.com";
+const baseURL = 'http://localhost:8000';
+const clientId = '1007332775808-q4j6sklcv5oi9stfl9j35etdvorooj9m.apps.googleusercontent.com';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -23,9 +22,7 @@ function App() {
   const [allThoughts, setAllThoughts] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [loginData, setLoginData] = useState(
-    localStorage.getItem("access_token")
-      ? localStorage.getItem("access_token")
-      : null
+    localStorage.getItem('access_token') ? localStorage.getItem('access_token') : null,
   );
 
   // google-login functions
@@ -33,8 +30,8 @@ function App() {
     axios
       .post(`${baseURL}/auth/convert-token`, {
         token: response.accessToken,
-        backend: "google-oauth2",
-        grant_type: "convert_token",
+        backend: 'google-oauth2',
+        grant_type: 'convert_token',
         client_id: drfClientId,
         client_secret: drfClientSecret,
       })
@@ -42,27 +39,32 @@ function App() {
         const { access_token, refresh_token } = res.data;
         console.log(res.data);
         console.log({ access_token, refresh_token });
-        localStorage.setItem("access_token", access_token);
+        localStorage.setItem('access_token', access_token);
         setLoginData(access_token);
-        localStorage.setItem("refresh_token", refresh_token);
+        localStorage.setItem('refresh_token', refresh_token);
       })
       .catch((err) => {
-        console.log("Error Google login", err);
+        console.log('Error Google login', err);
       });
   };
   // local storage logout function
   const handleLogout = () => {
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("access_token");
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('access_token');
     setLoginData(null);
   };
 
   // onLoad Get Requests
   useEffect(() => {
-    localStorage.getItem("access_token")
-      ? (window.location = "https://thought-org.vercel.app/reminders")
-      : (window.location = "https://thought-org.vercel.app/login");
+    localStorage.getItem('access_token')
+      ? (window.location = 'https://thought-org.vercel.app/reminders')
+      : (window.location = 'https://thought-org.vercel.app/login');
   }, []);
+  // useEffect(() => {
+  //   localStorage.getItem('access_token')
+  //     ? (window.location = 'http://localhost:3000/reminders')
+  //     : (window.location = 'http://localhost:3000/login');
+  // }, []);
 
   // Post Requests
   async function newThoughtPost(name, thought) {
@@ -72,19 +74,15 @@ function App() {
       thought: [thought],
     };
     await axios
-      .post("https://thought-org.herokuapp.com/folder", data)
+      .post('https://thought-org.herokuapp.com/folder', data)
       .then((response) => {
         setLoading(false);
-        axios
-          .get("https://thought-org.herokuapp.com/folder")
-          .then(function (response) {
-            setAllFolders(response.data);
-          });
-        axios
-          .get("https://thought-org.herokuapp.com/thought")
-          .then(function (response) {
-            setAllThoughts(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/folder').then(function (response) {
+          setAllFolders(response.data);
+        });
+        axios.get('https://thought-org.herokuapp.com/thought').then(function (response) {
+          setAllThoughts(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -98,15 +96,13 @@ function App() {
       thought: [thought],
     };
     await axios
-      .post("https://thought-org.herokuapp.com/folder/new/", data)
+      .post('https://thought-org.herokuapp.com/folder/new/', data)
       .then((response) => {
         setLoading(false);
         thoughtPut(thought_id, thought, dashboard, response.data.id);
-        axios
-          .get("https://thought-org.herokuapp.com/folder")
-          .then(function (response) {
-            setAllFolders(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/folder').then(function (response) {
+          setAllFolders(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -120,14 +116,12 @@ function App() {
       folder: folder_id,
     };
     await axios
-      .post("https://thought-org.herokuapp.com/thought", data)
+      .post('https://thought-org.herokuapp.com/thought', data)
       .then((response) => {
         setLoading(false);
-        axios
-          .get("https://thought-org.herokuapp.com/thought")
-          .then(function (response) {
-            setAllThoughts(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/thought').then(function (response) {
+          setAllThoughts(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -143,14 +137,12 @@ function App() {
       toggle: toggle,
     };
     await axios
-      .put("https://thought-org.herokuapp.com/folder/" + folder_id, data)
+      .put('https://thought-org.herokuapp.com/folder/' + folder_id, data)
       .then(function (response) {
         setLoading(false);
-        axios
-          .get("https://thought-org.herokuapp.com/folder")
-          .then(function (response) {
-            setAllFolders(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/folder').then(function (response) {
+          setAllFolders(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -165,14 +157,12 @@ function App() {
       folder: folder_id,
     };
     await axios
-      .put("https://thought-org.herokuapp.com/thought/" + thought_id, data)
+      .put('https://thought-org.herokuapp.com/thought/' + thought_id, data)
       .then(function (response) {
         setLoading(false);
-        axios
-          .get("https://thought-org.herokuapp.com/thought")
-          .then(function (response) {
-            setAllThoughts(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/thought').then(function (response) {
+          setAllThoughts(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -181,31 +171,23 @@ function App() {
   }
   // delete requests
   async function thoughtDelete(thought_id) {
-    await axios
-      .delete("https://thought-org.herokuapp.com/thought/" + thought_id)
-      .then((response) =>
-        axios
-          .get("https://thought-org.herokuapp.com/thought")
-          .then(function (response) {
-            setAllThoughts(response.data);
-          })
-      );
+    await axios.delete('https://thought-org.herokuapp.com/thought/' + thought_id).then((response) =>
+      axios.get('https://thought-org.herokuapp.com/thought').then(function (response) {
+        setAllThoughts(response.data);
+      }),
+    );
   }
   async function folderDelete(thought_id) {
     await axios
-      .delete("https://thought-org.herokuapp.com/folder/" + thought_id)
+      .delete('https://thought-org.herokuapp.com/folder/' + thought_id)
       .then((response) => {
         setLoading(false);
-        axios
-          .get("https://thought-org.herokuapp.com/folder")
-          .then(function (response) {
-            setAllFolders(response.data);
-          });
-        axios
-          .get("https://thought-org.herokuapp.com/thought")
-          .then(function (response) {
-            setAllThoughts(response.data);
-          });
+        axios.get('https://thought-org.herokuapp.com/folder').then(function (response) {
+          setAllFolders(response.data);
+        });
+        axios.get('https://thought-org.herokuapp.com/thought').then(function (response) {
+          setAllThoughts(response.data);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -255,9 +237,7 @@ function App() {
             {allThoughts.length > 0 &&
               allThoughts
                 .filter(
-                  (thought) =>
-                    (thought.dashboard !== true) &
-                    (thought.folder.name === "reminders")
+                  (thought) => (thought.dashboard !== true) & (thought.folder.name === 'reminders'),
                 )
                 .map((thought, index) => (
                   <div key={thought.id}>
@@ -279,10 +259,7 @@ function App() {
             <div className="borderBottom mb-3"></div>
             {allFolders.length > 0 &&
               allFolders
-                .filter(
-                  (folder) =>
-                    (folder.dashboard === true) & (folder.name !== "reminders")
-                )
+                .filter((folder) => (folder.dashboard === true) & (folder.name !== 'reminders'))
                 .map((folder, index) => (
                   <div key={folder.id}>
                     <Folder
@@ -324,8 +301,8 @@ function App() {
                 //     Sign in with Google
                 //   </button>
                 // )}
-                onFailure={(err) => console.log("Google Login failed", err)}
-                cookiePolicy={"single_host_origin"}
+                onFailure={(err) => console.log('Google Login failed', err)}
+                cookiePolicy={'single_host_origin'}
               ></GoogleLogin>
             </div>
             <br />
