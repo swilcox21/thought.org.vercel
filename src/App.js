@@ -58,16 +58,16 @@ function App() {
   // };
 
   // onLoad Get Requests
-  // useEffect(() => {
-  //   localStorage.getItem("access_token")
-  //     ? (window.location = "https://thought-org.vercel.app/reminders")
-  //     : (window.location = "https://thought-org.vercel.app/login");
-  // }, []);
   useEffect(() => {
     localStorage.getItem("access_token")
-      ? (window.location = "http://localhost:3000/reminders")
-      : (window.location = "http://localhost:3000/login");
+      ? (window.location = "https://thought-org.vercel.app/reminders")
+      : (window.location = "https://thought-org.vercel.app/login");
   }, []);
+  // useEffect(() => {
+  //   localStorage.getItem("access_token")
+  //     ? (window.location = "http://localhost:3000/reminders")
+  //     : (window.location = "http://localhost:3000/login");
+  // }, []);
 
   // Post Requests
   // async function newThoughtPost(name, thought) {

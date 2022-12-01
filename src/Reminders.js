@@ -31,7 +31,7 @@ function Reminders(props) {
         localStorage.removeItem("refresh_token");
         localStorage.removeItem("access_token");
         window.location = "https://thought-org.vercel.app/login";
-        window.location = "http://localhost:3000/login";
+        // window.location = "http://localhost:3000/login";
         alert("your session has expired please log back in");
       });
   }, []);

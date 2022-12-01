@@ -25,8 +25,8 @@ const handleGoogleLogin = (response) => {
       console.log({ access_token, refresh_token });
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
-      window.location = "http://localhost:3000";
-      // window.location = "https://thought-org.vercel.app";
+      // window.location = "http://localhost:3000";
+      window.location = "https://thought-org.vercel.app";
     })
     .catch((err) => {
       console.log("Error Google login", err);
