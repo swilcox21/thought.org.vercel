@@ -1,35 +1,38 @@
 /* eslint-disable no-unused-vars */
-import './App.css';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
-import PropTypes from 'prop-types';
+import "./App.css";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import TextareaAutosize from "react-textarea-autosize";
+import PropTypes from "prop-types";
+
+const baseURL = "http://0.0.0.0:8000";
 
 function Reminders(props) {
   const [loading, setLoading] = useState(false);
   const [reminders, setReminders] = useState([]);
-  const [text, setText] = useState('');
-  const [editText, setEditText] = useState('');
+  const [text, setText] = useState("");
+  const [editText, setEditText] = useState("");
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     axios
-      .get('https://thoughtorgapi.herokuapp.com/reminder/', {
+      .get(`${baseURL}/reminder/`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       })
       .then(function (response) {
         setReminders(response.data);
+        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('access_token');
-        window.location = 'https://thought-org.vercel.app/login';
-        window.location = 'http://localhost:3000/login';
-        alert('your session has expired please log back in');
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("access_token");
+        window.location = "https://thought-org.vercel.app/login";
+        window.location = "http://localhost:3000/login";
+        alert("your session has expired please log back in");
       });
   }, []);
 
@@ -40,22 +43,22 @@ function Reminders(props) {
       recurring: recurring,
     };
     await axios
-      .post('https://thoughtorgapi.herokuapp.com/reminder/', data, {
+      .post(`${baseURL}/reminder/`, data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       })
       .then((response) => {
         setLoading(false);
         axios
-          .get('https://thoughtorgapi.herokuapp.com/reminder/', {
+          .get(`${baseURL}/reminder/`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           })
           .then(function (response) {
             setReminders(response.data);
-            setText('');
+            setText("");
           });
       })
       .catch((err) => {
@@ -70,22 +73,22 @@ function Reminders(props) {
       recurring: recurring,
     };
     await axios
-      .put('https://thoughtorgapi.herokuapp.com/reminder/' + reminder_id, data, {
+      .put(`${baseURL}/reminder/` + reminder_id, data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       })
       .then((response) => {
         setLoading(false);
         axios
-          .get('https://thoughtorgapi.herokuapp.com/reminder/', {
+          .get(`${baseURL}/reminder/`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           })
           .then(function (response) {
             setReminders(response.data);
-            setEditText('');
+            setEditText("");
           });
       })
       .catch((err) => {
@@ -95,29 +98,29 @@ function Reminders(props) {
   }
   async function reminderDelete(reminder_id) {
     await axios
-      .delete('https://thoughtorgapi.herokuapp.com/reminder/' + reminder_id, {
+      .delete(`${baseURL}/reminder/` + reminder_id, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       })
       .then((response) =>
         axios
-          .get('https://thoughtorgapi.herokuapp.com/reminder/', {
+          .get(`${baseURL}/reminder/`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           })
           .then(function (response) {
             setReminders(response.data);
-          }),
+          })
       );
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('access_token');
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access_token");
     // window.location = 'http://localhost:3000/';
-    window.location = 'https://thought-org.vercel.app/';
+    window.location = "https://thought-org.vercel.app/";
   };
 
   return (
@@ -125,8 +128,8 @@ function Reminders(props) {
       <button
         className="addnewButton"
         onClick={() => {
-          text === '' && reminderPost(text, checked);
-          setText('');
+          text === "" && reminderPost(text, checked);
+          setText("");
         }}
       >
         addnew
@@ -149,7 +152,9 @@ function Reminders(props) {
                 <input
                   type="checkbox"
                   checked={reminder.recurring}
-                  onChange={() => reminderPut(reminder.text, !reminder.recurring, reminder.id)}
+                  onChange={() =>
+                    reminderPut(reminder.text, !reminder.recurring, reminder.id)
+                  }
                 />
                 <TextareaAutosize
                   id="textareaautosize"
@@ -160,7 +165,8 @@ function Reminders(props) {
                     setEditText(e.target.value);
                   }}
                   onBlur={() => {
-                    editText !== '' && reminderPut(editText, reminder.recurring, reminder.id);
+                    editText !== "" &&
+                      reminderPut(editText, reminder.recurring, reminder.id);
                   }}
                 />
                 <button
@@ -176,26 +182,30 @@ function Reminders(props) {
               </div>
             ))}
         <div className="reminder">
-          <input type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={() => setChecked(!checked)}
+          />
           <TextareaAutosize
             id="textareaautosize"
             className="col-9 borderBottom mx-3 py-1 pl-2"
             placeholder="Add new Reminder here..."
             type="text"
-            defaultValue={''}
+            defaultValue={""}
             value={text}
             onChange={(e) => {
               setText(e.target.value);
             }}
             onBlur={() => {
-              text !== '' && reminderPost(text, checked);
+              text !== "" && reminderPost(text, checked);
             }}
           />
           <button
             className="submitButton"
             onClick={() => {
-              text === '' && reminderPost(text, checked);
-              setText('');
+              text === "" && reminderPost(text, checked);
+              setText("");
               setChecked(false);
             }}
           >
@@ -212,7 +222,9 @@ function Reminders(props) {
                 <input
                   type="checkbox"
                   checked={reminder.recurring}
-                  onChange={() => reminderPut(reminder.text, !reminder.recurring, reminder.id)}
+                  onChange={() =>
+                    reminderPut(reminder.text, !reminder.recurring, reminder.id)
+                  }
                 />
                 <TextareaAutosize
                   id="textareaautosize"
@@ -223,7 +235,8 @@ function Reminders(props) {
                     setEditText(e.target.value);
                   }}
                   onBlur={() => {
-                    editText !== '' && reminderPut(editText, reminder.recurring, reminder.id);
+                    editText !== "" &&
+                      reminderPut(editText, reminder.recurring, reminder.id);
                   }}
                 />
                 <button
