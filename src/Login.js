@@ -3,38 +3,47 @@ import "./App.css";
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import axios from "axios";
-import { gapi } from "gapi-script";
 
-const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const drfClientId = process.env.REACT_APP_DRF_CLIENT_ID;
-const drfClientSecret = process.env.REACT_APP_DRF_CLIENT_SECRET;
-const baseURL = "http://0.0.0.0:8000";
+const baseURL = "https://thotapi.herokuapp.com";
 
-const handleGoogleLogin = (response) => {
-  axios
-    .post(`${baseURL}/auth/convert-token`, {
-      token: response.accessToken,
-      backend: "google-oauth2",
-      grant_type: "convert_token",
-      client_id: drfClientId,
-      client_secret: drfClientSecret,
-    })
-    .then((res) => {
-      const { access_token, refresh_token } = res.data;
-      console.log(res.data);
-      console.log({ access_token, refresh_token });
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-      // window.location = "http://localhost:3000";
-      window.location = "https://thought-org.vercel.app";
-    })
-    .catch((err) => {
-      console.log("Error Google login", err);
-    });
-};
 function Login() {
+  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState("");
+
+  async function handleLogin() {
+    setLoading(true);
+    const body = {
+      username: username,
+      password: password,
+    };
+    await axios
+      .post(`${baseURL}/api/token/`, body, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        localStorage.setItem("access", response.data.access);
+        localStorage.setItem("refresh", response.data.refresh);
+        window.location = "https://thought-org.vercel.app/reminders";
+        // window.location = "http://localhost:3000/reminders";
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }
+
   return (
     <>
+      {loading && (
+        <div className="loadBar">
+          ==============================================
+        </div>
+      )}
       <div className="loginContainer">
         <div className="loginCard">
           <h2>Welcome to Thought.org!</h2>
@@ -43,14 +52,19 @@ function Login() {
             src="https://github.com/swilcox21/Thot.Org/blob/main/src/front/img/looping-down-arrows.gif?raw=true"
             alt=""
           />
-          <div className="loginButton">
-            <GoogleLogin
-              clientId={googleClientId}
-              buttonText="LOGIN WITH GOOGLE"
-              onSuccess={(response) => handleGoogleLogin(response)}
-              onFailure={(err) => console.log("Google Login failed", err)}
-              cookiePolicy={"single_host_origin"}
-            ></GoogleLogin>
+          <div className="logindiv">
+            <input
+              type="text"
+              placeholder="username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <br />
+            <button onClick={() => handleLogin()}>LOGIN</button>
           </div>
           <br />
           <small>If you do not have google go away</small>
