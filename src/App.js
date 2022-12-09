@@ -17,7 +17,7 @@ import userEvent from "@testing-library/user-event";
 // const drfClientSecret = process.env.REACT_APP_DRF_CLIENT_SECRET;
 // const clientId =
 // "1007332775808-q4j6sklcv5oi9stfl9j35etdvorooj9m.apps.googleusercontent.com";
-const baseURL = "https://thotapi.herokuapp.com";
+const baseURL = "https://thorgapi.herokuapp.com";
 
 function App() {
   const [reminders, setReminders] = useState(false);

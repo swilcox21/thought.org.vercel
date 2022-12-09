@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import axios from "axios";
 
-const baseURL = "https://thotapi.herokuapp.com";
+const baseURL = "https://thorgapi.herokuapp.com";
 
 function Login() {
   const [loading, setLoading] = useState(false);

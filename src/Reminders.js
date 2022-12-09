@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from "prop-types";
 
-const baseURL = "https://thotapi.herokuapp.com";
+const baseURL = "https://thorgapi.herokuapp.com";
 
 function Reminders(props) {
   const [loading, setLoading] = useState(false);
