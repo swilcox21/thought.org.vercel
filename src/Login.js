@@ -29,7 +29,7 @@ function Login() {
         localStorage.setItem("access", response.data.access);
         localStorage.setItem("refresh", response.data.refresh);
         window.location = "https://thought-org.vercel.app/reminders";
-        // window.location = "http://localhost:3000/reminders";
+        // window.location = "http://localhost:3001/reminders";
       })
       .catch((err) => {
         console.log(err);

@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
-import "./App.css";
+import "../App.css";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from "prop-types";
+// import { useDispatch, useSelector } from "react-redux";
 
 const baseURL = "https://thorgapi.herokuapp.com";
+
+// const selectReminders = (state) => state.reminders;
 
 function Reminders(props) {
   const [loading, setLoading] = useState(false);
@@ -13,6 +16,10 @@ function Reminders(props) {
   const [text, setText] = useState("");
   const [editText, setEditText] = useState("");
   const [checked, setChecked] = useState(false);
+
+  // const dispatch = useDispatch();
+
+  // const remindersList = useSelector(selectReminders);
 
   //
   // RETREIVE EXPIRED ACCESS TOKEN WITH THIS REFRESH TOKEN FUNCTION
@@ -33,8 +40,8 @@ function Reminders(props) {
       .catch((err) => {
         localStorage.removeItem("refresh");
         localStorage.removeItem("access");
+        // window.location = "http://localhost:3001/login";
         window.location = "https://thought-org.vercel.app/login";
-        // window.location = "http://localhost:3000/login";
         alert("your session has expired please log back in");
         setLoading(false);
       });
@@ -51,6 +58,7 @@ function Reminders(props) {
         },
       })
       .then((response) => {
+        console.log("THE GET:", response.data);
         setReminders(response.data);
         setLoading(false);
       })
@@ -67,12 +75,17 @@ function Reminders(props) {
   //
   useEffect(() => {
     setLoading(true);
-    getReminders();
+    getReminders().then(() => {
+      console.log("reminders:", reminders);
+      // console.log("remindersList:", remindersList);
+      // });
+    });
   }, []);
 
   //
   //  POST PUT AND DELETE REQUESTS FOR REMINDERS
   //
+
   //  POST
   async function reminderPost(text, recurring) {
     setLoading(true);
@@ -80,35 +93,36 @@ function Reminders(props) {
       text: text,
       recurring: recurring,
     };
-    await axios
-      .post(`${baseURL}/reminder/`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      })
-      .then((response) => {
-        getReminders();
-        setText("");
-      })
-      .catch((err) => {
-        refreshAccessToken();
-        axios
-          .post(`${baseURL}/reminder/`, data, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          })
-          .then((response) => {
-            setLoading(false);
-            getReminders();
-          })
-          .catch((err) => {
-            alert("invalid POST request");
-            setLoading(false);
-            console.log(err);
-          });
+    // declaring the post request here but not calling it quite yet so I can call it multiple times later without having to rewrite the entire function DRY
+    // when more models are present can write this somewhere else (like reducers) and reuse for all the different api url locations...
+    async function postRequest(text, recurring) {
+      await axios
+        .post(`${baseURL}/reminder/`, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        })
+        .then((response) => {
+          getReminders();
+          setText("");
+        });
+      // .catch() will be called later because this function requires multiple different catches
+      // 1. CATCH REFRESH:    for the refresh token which will happen by design quite often
+      // 2. CATCH ALL ELSE:   for any other reason that an API might fail
+    }
+    // actual post request call here followed by the REFRESH CATCH
+    // recalling post request with the new acces token from the refresh() return followed by the CATCH ALL ELSE
+    postRequest().catch((err) => {
+      refreshAccessToken().then(() => {
+        postRequest().catch((err) => {
+          alert("invalid POST request");
+          setLoading(false);
+          console.log(err);
+        });
       });
+    });
   }
+
   // PUT
   async function reminderPut(text, recurring, reminder_id) {
     setLoading(true);
@@ -116,71 +130,61 @@ function Reminders(props) {
       text: text,
       recurring: recurring,
     };
-    await axios
-      .put(`${baseURL}/reminder/` + reminder_id, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        getReminders();
-        setEditText("");
-      })
-      .catch((err) => {
-        console.log(err);
-        refreshAccessToken();
-        axios
-          .put(`${baseURL}/reminder/` + reminder_id, data, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          })
-          .then((response) => {
-            setLoading(false);
-            getReminders();
-            setEditText("");
-          })
-          .catch((err) => {
-            alert("invalid PUT request");
-            setLoading(false);
-            console.log(err);
-          });
+    async function putRequest(text, recurring, reminder_id) {
+      await axios
+        .put(`${baseURL}/reminder/` + reminder_id, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        })
+        .then((response) => {
+          setLoading(false);
+          getReminders();
+          setEditText("");
+        });
+    }
+    putRequest().catch((err) => {
+      console.log(err);
+      refreshAccessToken().then(() => {
+        putRequest().catch((err) => {
+          alert("invalid PUT request");
+          setLoading(false);
+          console.log(err);
+        });
       });
+    });
   }
+
   // DELETE
   async function reminderDelete(reminder_id) {
     setLoading(true);
-    await axios
-      .delete(`${baseURL}/reminder/` + reminder_id, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        getReminders();
-      })
-      .catch((err) => {
-        refreshAccessToken();
-        axios
-          .delete(`${baseURL}/reminder/` + reminder_id, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`,
-            },
-          })
-          .catch((err) => {
-            alert("invalid DELETE request");
-            setLoading(false);
-            console.log(err);
-          });
+    async function deleteRequest() {
+      await axios
+        .delete(`${baseURL}/reminder/` + reminder_id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        })
+        .then((response) => {
+          setLoading(false);
+          getReminders();
+        });
+    }
+    deleteRequest().catch((err) => {
+      refreshAccessToken().then(() => {
+        deleteRequest().catch((err) => {
+          alert("invalid DELETE request");
+          setLoading(false);
+          console.log(err);
+        });
       });
+    });
   }
 
   const handleLogout = () => {
     localStorage.removeItem("refresh");
     localStorage.removeItem("access");
-    // window.location = "http://localhost:3000/";
+    // window.location = "http://localhost:3001/";
     window.location = "https://thought-org.vercel.app/";
   };
 
