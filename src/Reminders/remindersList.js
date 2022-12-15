@@ -360,6 +360,9 @@ function Reminders(props) {
           </div>
         )}
       </div>
+      <br />
+      <br />
+      <br />
       <footer className="footer">thot.org</footer>
     </>
   );
