@@ -16,10 +16,32 @@ function Reminders(props) {
   const [text, setText] = useState("");
   const [editText, setEditText] = useState("");
   const [checked, setChecked] = useState(false);
+  const [thotToggle, setThotToggle] = useState(false);
 
   // const dispatch = useDispatch();
 
   // const remindersList = useSelector(selectReminders);
+
+  //
+  // REUSABLE GET REQUEST FOR REMINDERS (will use refresh if access is expired)
+  //
+
+  async function getReminders() {
+    await axios
+      .get(`${baseURL}/reminder/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      })
+      .then((response) => {
+        console.log("THE GET:", response.data);
+        setReminders(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        refreshAccessToken();
+      });
+  }
 
   //
   // RETREIVE EXPIRED ACCESS TOKEN WITH THIS REFRESH TOKEN FUNCTION
@@ -40,32 +62,19 @@ function Reminders(props) {
       .catch((err) => {
         localStorage.removeItem("refresh");
         localStorage.removeItem("access");
-        // window.location = "http://localhost:3001/login";
-        window.location = "https://thought-org.vercel.app/login";
         alert("your session has expired please log back in");
         setLoading(false);
+        // window.location = "http://localhost:3000/login";
+        window.location = "https://thought-org.vercel.app/login";
       });
   }
 
-  //
-  // REUSABLE GET REQUEST FOR REMINDERS (will use refresh if access is expired)
-  //
-  async function getReminders() {
-    await axios
-      .get(`${baseURL}/reminder/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      })
-      .then((response) => {
-        console.log("THE GET:", response.data);
-        setReminders(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        refreshAccessToken();
-      });
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("access");
+    // window.location = "http://localhost:3000/";
+    window.location = "https://thought-org.vercel.app/";
+  };
 
   //
   // USEEFFECT CALL FOR EACH TIME THE PAGE LOADS
@@ -81,7 +90,6 @@ function Reminders(props) {
       // });
     });
   }, []);
-
   //
   //  POST PUT AND DELETE REQUESTS FOR REMINDERS
   //
@@ -95,8 +103,8 @@ function Reminders(props) {
     };
     // declaring the post request here but not calling it quite yet so I can call it multiple times later without having to rewrite the entire function DRY
     // when more models are present can write this somewhere else (like reducers) and reuse for all the different api url locations...
-    async function postRequest(text, recurring) {
-      await axios
+    function postRequest(text, recurring) {
+      axios
         .post(`${baseURL}/reminder/`, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -130,9 +138,10 @@ function Reminders(props) {
       text: text,
       recurring: recurring,
     };
-    async function putRequest(text, recurring, reminder_id) {
+    const id = reminder_id;
+    async function putRequest() {
       await axios
-        .put(`${baseURL}/reminder/` + reminder_id, data, {
+        .put(`${baseURL}/reminder/` + id, data, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
@@ -180,13 +189,6 @@ function Reminders(props) {
       });
     });
   }
-
-  const handleLogout = () => {
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("access");
-    // window.location = "http://localhost:3001/";
-    window.location = "https://thought-org.vercel.app/";
-  };
 
   return (
     <>
@@ -253,6 +255,7 @@ function Reminders(props) {
             ))}
         <div className="reminder">
           <input
+            className="phantomCheckbox"
             type="checkbox"
             checked={checked}
             onChange={() => setChecked(!checked)}
@@ -284,43 +287,78 @@ function Reminders(props) {
           <br />
           <br />
         </div>
-        {reminders.length > 0 &&
-          reminders
-            .filter((reminders) => reminders.recurring === true)
-            .map((reminder, index) => (
-              <div className="reminder" key={reminder.id}>
-                <input
-                  type="checkbox"
-                  checked={reminder.recurring}
-                  onChange={() =>
-                    reminderPut(reminder.text, !reminder.recurring, reminder.id)
-                  }
-                />
-                <TextareaAutosize
-                  id="textareaautosize"
-                  className="col-9 borderBottom mx-3 py-1 pl-2"
-                  type="text"
-                  defaultValue={reminder.text}
-                  onChange={(e) => {
-                    setEditText(e.target.value);
-                  }}
-                  onBlur={() => {
-                    editText !== "" &&
-                      reminderPut(editText, reminder.recurring, reminder.id);
-                  }}
-                />
-                <button
-                  className="submitButton"
-                  onClick={() => {
-                    reminderDelete(reminder.id);
-                  }}
-                >
-                  X
-                </button>
-                <br />
-                <br />
+        {thotToggle ? (
+          <div>
+            <div
+              className="thotToggle"
+              onClick={() => setThotToggle(!thotToggle)}
+            >
+              <br />
+              <div className="thotsHeader">
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                <h4>&nbsp; thots &nbsp;</h4>
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
               </div>
-            ))}
+            </div>
+            {reminders.length > 0 &&
+              reminders
+                .filter((reminders) => reminders.recurring === true)
+                .map((reminder, index) => (
+                  <div className="reminder" key={reminder.id}>
+                    <input
+                      type="checkbox"
+                      checked={reminder.recurring}
+                      onChange={() =>
+                        reminderPut(
+                          reminder.text,
+                          !reminder.recurring,
+                          reminder.id
+                        )
+                      }
+                    />
+                    <TextareaAutosize
+                      id="textareaautosize"
+                      className="col-9 borderBottom mx-3 py-1 pl-2"
+                      type="text"
+                      defaultValue={reminder.text}
+                      onChange={(e) => {
+                        setEditText(e.target.value);
+                      }}
+                      onBlur={() => {
+                        editText !== "" &&
+                          reminderPut(
+                            editText,
+                            reminder.recurring,
+                            reminder.id
+                          );
+                      }}
+                    />
+                    <button
+                      className="submitButton"
+                      onClick={() => {
+                        reminderDelete(reminder.id);
+                      }}
+                    >
+                      X
+                    </button>
+                    <br />
+                    <br />
+                  </div>
+                ))}
+          </div>
+        ) : (
+          <div
+            onClick={() => setThotToggle(!thotToggle)}
+            className="thotToggle"
+          >
+            <br />
+            <div className="thotsHeader">
+              <i class="fa fa-angle-right" aria-hidden="true"></i>
+              <h4>&nbsp; thots &nbsp;</h4>
+              <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

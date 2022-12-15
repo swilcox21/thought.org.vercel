@@ -44,8 +44,10 @@
 .addnewButton {
   margin: 5%;
   float: left;
-  /* width: 71px;
-  height: 30px; */
+}
+.phantomCheckbox {
+  position: relative;
+  opacity: 10%;
 }
 .remindersContainer {
   width: 60%;
@@ -58,6 +60,17 @@
   align-items: baseline;
   justify-content: center;
 }
+.thotsHeader {
+  display: flex;
+  justify-content: center;
+}
+.thotToggle {
+  /* margin-left: 80px; */
+  text-align: middle;
+  /* text-align: left; */
+  cursor: pointer;
+  font-size: 29px;
+}
 @media (max-width: 1000px) {
   .remindersContainer {
     width: 600px;
@@ -68,6 +81,7 @@
     width: 90%;
   }
 }
+
 /* border styles */
 .borderNone {
   border: none;
@@ -101,11 +115,12 @@
   z-index: 2;
   background-color: rgb(152, 160, 169);
 }
-/* dashBoard */
 
+/* dashBoard */
 .dashBoardFolder {
   margin-left: 5vh;
 }
+
 /* sideNav */
 .sideNav {
   height: 100%;
