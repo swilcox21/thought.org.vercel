@@ -27,7 +27,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, checked: !action.checked };
     }
     case CHECKED_RESET: {
-      return { ...state, checked: false };
+      return { ...state, checked: true };
     }
     // showFull
     case SET_SHOW_FULL: {
@@ -62,7 +62,7 @@ export default function reducer(state = initialState, action) {
         ],
         loading: false,
         text: "",
-        checked: false,
+        checked: true,
       };
     }
     case REMINDER_PUT: {

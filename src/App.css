@@ -1,6 +1,6 @@
-/* .App {
-  margin-top: 50px;
-} */
+.App {
+  min-height: 100vh;
+}
 .loadBar {
   position: fixed;
   z-index: 100;
@@ -8,6 +8,14 @@
   margin: auto;
   text-align: center;
   width: 100%;
+}
+.hide {
+  display: none;
+}
+.middle {
+  /* float: center; */
+  position: relative;
+  z-index: 100;
 }
 /* loginButton*/
 .loginButton {
@@ -34,20 +42,31 @@
 }
 /* logoutButton */
 .logoutButton {
-  float: right;
   margin: 5%;
-  /* width: 71px;
-  height: 30px; */
+  width: 80px;
 }
-
+.remindersButton {
+  margin: 4%;
+  width: 80px;
+}
+.thotsButtton {
+  margin: 4%;
+  width: 80px;
+  min-height: 60px;
+}
+.front {
+  position: relative;
+  z-index: 100;
+}
 /* REMINDERS STYLES */
 .addnewButton {
   margin: 5%;
   float: left;
+  width: 80px;
 }
 .phantomCheckbox {
   position: relative;
-  opacity: 10%;
+  opacity: 80%;
 }
 .remindersContainer {
   width: 60%;
@@ -60,13 +79,22 @@
   align-items: baseline;
   justify-content: center;
 }
+.reminderTextArea {
+  max-height: 34px;
+  overflow: hidden;
+}
+.reminderTextArea:focus {
+  max-height: fit-content;
+  min-height: 34px;
+}
 .thotsHeader {
   display: flex;
   justify-content: center;
 }
 .thotToggle {
-  /* margin-left: 80px; */
+  margin-top: -100px;
   text-align: middle;
+  color: white;
   /* text-align: left; */
   cursor: pointer;
   font-size: 29px;
@@ -185,4 +213,24 @@
   bottom: 0;
   color: white;
   text-align: center;
+}
+.showNav {
+  background-color: gray;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  padding: 3% 6% 3% 6%;
+  background-color: rgb(85, 85, 85);
+  margin: auto;
+  text-align: center;
+  width: 100%;
+}
+.hideNav {
+  position: fixed;
+  height: 30px;
+  z-index: 80;
+  background-color: gray;
+  margin: auto;
+  text-align: center;
+  width: 100%;
 }
