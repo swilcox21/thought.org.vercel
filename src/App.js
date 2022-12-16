@@ -4,7 +4,7 @@ import "./App.css";
 import { Navigator } from "./Navigator";
 import { NavBar } from "./NavBar";
 import Login from "./Login";
-import Reminders from "./reminders/reminderApp";
+import Reminders from "./Reminders/reminderApp";
 import Thots from "./thots/thotsApp";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";

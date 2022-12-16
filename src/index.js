@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import reminderReducer from "./reminders/reminderReducer";
+import reminderReducer from "./Reminders/reminderReducer";
 import thotReducer from "./thots/thotReducer";
 import rootReducer from "./store";
 export const development = true;
