@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import reminders from "./reminders/reducer";
+import reminders from "./reminders";
 import rootReducer from "./reducer";
 export const development = false;
 export const dev = "http://localhost:3001/";
