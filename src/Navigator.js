@@ -22,9 +22,9 @@ export function Navigator(props) {
   return (
     <>
       {refresh ? (
-        <Navigate to="/reminders" replace={true} />
+        <Navigate to="reminders" replace={true} />
       ) : (
-        <Navigate to="/login" replace={true} />
+        <Navigate to="login" replace={true} />
       )}
     </>
   );

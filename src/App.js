@@ -9,6 +9,7 @@ import Thots from "./thots/thotsApp";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer from "./store";
+import { prod, dev, development } from ".";
 
 function App() {
   const initialState = {
@@ -21,7 +22,9 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
+        {window.location.href !== "http://localhost:3001//login" && (
+          <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
+        )}
         <Routes>
           <Route path="/" element={<Navigator nav={nav} />} />
           <Route path="/login" element={<Login nav={nav} />} />

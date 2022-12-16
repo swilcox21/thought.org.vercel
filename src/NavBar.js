@@ -9,7 +9,7 @@ import "./App.css";
 const handleLogout = () => {
   localStorage.removeItem("refresh");
   localStorage.removeItem("access");
-  window.location = development ? dev + "/login" : prod + "/login";
+  window.location = development ? dev + "login" : prod + "login";
 };
 
 export function NavBar(props) {
