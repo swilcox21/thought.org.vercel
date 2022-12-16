@@ -3,7 +3,7 @@ import "./App.css";
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
 import axios from "axios";
-
+import { dev, prod, development } from "./index";
 const baseURL = "https://thorgapi.herokuapp.com";
 
 function Login() {
@@ -28,8 +28,8 @@ function Login() {
       .then((response) => {
         localStorage.setItem("access", response.data.access);
         localStorage.setItem("refresh", response.data.refresh);
-        window.location = "http://localhost:3001/reminders";
-        // window.location = "https://thought-org.vercel.app/reminders";
+        // window.location = "http://localhost:3001/reminders";
+        window.location = "https://thought-org.vercel.app/reminders";
       })
       .catch((err) => {
         console.log(err);
