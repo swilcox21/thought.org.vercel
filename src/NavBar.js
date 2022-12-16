@@ -6,11 +6,11 @@ import { development, dev, prod } from "./index";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer from "./reducer";
 import "./App.css";
-
+const devLogin = dev + "/login";
 const handleLogout = () => {
   localStorage.removeItem("refresh");
   localStorage.removeItem("access");
-  window.location = development ? dev : prod;
+  window.location = development ? dev + "/login" : prod + "/login";
 };
 
 export function NavBar(props) {
