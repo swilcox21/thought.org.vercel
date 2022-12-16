@@ -110,3 +110,4 @@ export const REMINDER_GET = "reminder/reminderGet";
 export const REMINDER_POST = "reminder/reminderPost";
 export const REMINDER_PUT = "reminder/reminderPut";
 export const REMINDER_DELETE = "reminder/reminderDelete";
+// vercel
