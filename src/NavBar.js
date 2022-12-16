@@ -6,7 +6,6 @@ import { development, dev, prod } from "./index";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer from "./reducer";
 import "./App.css";
-const devLogin = dev + "/login";
 const handleLogout = () => {
   localStorage.removeItem("refresh");
   localStorage.removeItem("access");
