@@ -22,7 +22,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {window.location.href !== "http://localhost:3001//login" && (
+        {window.location.href !== "http://localhost:3001/login" && (
           <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
         )}
         <Routes>
