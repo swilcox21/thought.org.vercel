@@ -18,20 +18,20 @@ import reducer, {
   SET_CHECKED,
   SET_SHOW_FULL,
   SET_THOT_TOGGLE,
-} from "./reducer";
+} from "./thotReducer";
+import SET_NAV from "../store";
 import { development, dev, prod } from "..";
-import { SET_NAV } from "../reducer";
 
 // REMINDERS
 
-function Reminders() {
+function Thots() {
   const initialState = {
     loading: false,
     text: "",
     editText: "",
-    checked: false,
+    checked: true,
     showFull: false,
-    thotToggle: false,
+    thotToggle: true,
     reminders: [],
   };
   const [state, dispatch] = useThunkReducer(reducer, initialState);
@@ -43,8 +43,8 @@ function Reminders() {
   // if it exists in the cache, else it will use refreshToken() to return a new access token
   //
   useEffect(() => {
+    dispatch({ type: SET_NAV, nav: "/thots" });
     getReminders(dispatch);
-    dispatch({ type: SET_NAV, nav: "/reminders" });
   }, []);
 
   //
@@ -59,72 +59,32 @@ function Reminders() {
   return (
     <>
       {loading && <div className="loadBar">I LOVE CHRISTINE</div>}
-      <button
-        className="addnewButton"
-        onClick={() => {
-          dispatch({ type: SET_SHOW_FULL, showFull: showFull });
-        }}
-      >
-        {showFull ? "shrink" : "grow"}
-      </button>
 
-      <br />
-      <br />
-      <br />
       <div className="remindersContainer">
+        <div
+          onClick={() =>
+            dispatch({ type: SET_THOT_TOGGLE, thotToggle: thotToggle })
+          }
+          className="thotToggle"
+        >
+          <br />
+          {thotToggle ? (
+            <div className="thotsHeader">
+              <i className="fa fa-angle-down" aria-hidden="true"></i>
+              <h4>&nbsp; thots &nbsp;</h4>
+              <i className="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+          ) : (
+            <div className="thotsHeader">
+              <i className="fa fa-angle-right" aria-hidden="true"></i>
+              <h4>&nbsp; thots &nbsp;</h4>
+              <i className="fa fa-angle-left" aria-hidden="true"></i>
+            </div>
+          )}
+        </div>
         <br />
-        <h2>Reminders</h2>
         <br />
-        {reminders.length > 0 &&
-          reminders
-            .filter((reminders) => reminders.recurring === false)
-            .map((reminder, index) => (
-              <div className="reminder" key={reminder.id}>
-                <input
-                  type="checkbox"
-                  checked={reminder.recurring}
-                  onChange={() =>
-                    reminderPut(
-                      dispatch,
-                      reminder.text,
-                      !reminder.recurring,
-                      reminder.id
-                    )
-                  }
-                />
-                <TextareaAutosize
-                  className={
-                    showFull
-                      ? "col-9 borderBottom mx-3 py-1 pl-2"
-                      : "col-9 borderBottom reminderTextArea mx-3 py-1 pl-2"
-                  }
-                  type="text"
-                  defaultValue={reminder.text}
-                  onChange={(e) => {
-                    dispatch({ type: SET_EDIT_TEXT, editText: e.target.value });
-                  }}
-                  onBlur={() => {
-                    editText !== "" &&
-                      reminderPut(
-                        dispatch,
-                        editText,
-                        reminder.recurring,
-                        reminder.id
-                      );
-                  }}
-                />
-                <button
-                  className="submitButton"
-                  onClick={() => {
-                    reminderDelete(dispatch, reminder.id);
-                  }}
-                >
-                  X
-                </button>
-                <br />
-                <br />
-              </div>
-            ))}
+        <br />
         <div className="reminder">
           <input
             className="phantomCheckbox"
@@ -157,22 +117,10 @@ function Reminders() {
           </button>
           <br />
           <br />
+          <br />
         </div>
-        {thotToggle ? (
+        {thotToggle && (
           <div>
-            <div
-              className="thotToggle"
-              onClick={() =>
-                dispatch({ type: SET_THOT_TOGGLE, thotToggle: thotToggle })
-              }
-            >
-              <br />
-              <div className="thotsHeader">
-                <i className="fa fa-angle-down" aria-hidden="true"></i>
-                <h4>&nbsp; thots &nbsp;</h4>
-                <i className="fa fa-angle-down" aria-hidden="true"></i>
-              </div>
-            </div>
             {reminders.length > 0 &&
               reminders
                 .filter((reminders) => reminders.recurring === true)
@@ -223,20 +171,6 @@ function Reminders() {
                   </div>
                 ))}
           </div>
-        ) : (
-          <div
-            onClick={() =>
-              dispatch({ type: SET_THOT_TOGGLE, thotToggle: thotToggle })
-            }
-            className="thotToggle"
-          >
-            <br />
-            <div className="thotsHeader">
-              <i className="fa fa-angle-right" aria-hidden="true"></i>
-              <h4>&nbsp; thots &nbsp;</h4>
-              <i className="fa fa-angle-left" aria-hidden="true"></i>
-            </div>
-          </div>
         )}
       </div>
       <br />
@@ -247,7 +181,7 @@ function Reminders() {
   );
 }
 
-export default Reminders;
+export default Thots;
 // vercel
 // Reminders.propTypes = {
 //   reminder: PropTypes.object,

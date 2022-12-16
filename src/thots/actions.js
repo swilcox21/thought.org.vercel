@@ -5,7 +5,7 @@ import {
   REMINDER_POST,
   REMINDER_PUT,
   REMINDER_DELETE,
-} from "./reducer";
+} from "./thotReducer";
 import { baseURL } from "..";
 
 // RETREIVE EXPIRED ACCESS TOKEN WITH THIS REFRESH TOKEN FUNCTION

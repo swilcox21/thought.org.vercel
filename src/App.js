@@ -4,11 +4,11 @@ import "./App.css";
 import { Navigator } from "./Navigator";
 import { NavBar } from "./NavBar";
 import Login from "./Login";
-import Reminders from "./reminders/reminders";
-import Thots from "./thots/thots";
+import Reminders from "./reminders/reminderApp";
+import Thots from "./thots/thotsApp";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";
-import rootReducer from "./reducer";
+import rootReducer from "./store";
 
 function App() {
   const initialState = {

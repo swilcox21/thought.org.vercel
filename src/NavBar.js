@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Navigate, Link } from "react-router-dom";
-import { SHOW_NAV, SET_NAV } from "./reducer";
+import { SHOW_NAV, SET_NAV } from "./store";
 import { development, dev, prod } from "./index";
 import { useThunkReducer } from "react-hook-thunk-reducer";
-import rootReducer from "./reducer";
+import rootReducer from "./store";
 import "./App.css";
 const handleLogout = () => {
   localStorage.removeItem("refresh");
