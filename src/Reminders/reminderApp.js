@@ -2,7 +2,7 @@
 // import PropTypes from "prop-types";
 import "../App.css";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { useThunkReducer } from "react-hook-thunk-reducer";
@@ -12,12 +12,16 @@ import {
   reminderPut,
   reminderDelete,
 } from "./actions";
+
 import reducer, {
   SET_TEXT,
   SET_EDIT_TEXT,
   SET_CHECKED,
   SET_SHOW_FULL,
-  SET_THOT_TOGGLE,
+  SET_REMINDER_TOGGLE,
+  SET_WRAP_POSITION,
+  SET_CONT_POSITION,
+  SET_FOOT_POSITION,
 } from "./reminderReducer";
 import { development, dev, prod } from "..";
 import { SET_NAV } from "../store";
@@ -31,12 +35,74 @@ function Reminders() {
     editText: "",
     checked: false,
     showFull: false,
-    thotToggle: false,
+    reminderToggle: false,
     reminders: [],
+    wrapSize: {},
+    contSize: {},
+    footSize: {},
   };
   const [state, dispatch] = useThunkReducer(reducer, initialState);
-  const { loading, text, editText, checked, thotToggle, reminders, showFull } =
-    state;
+  const [wrapPos, setWrapPos] = useState(state.wrapSize.height);
+  const [contPos, setContPos] = useState(state.contSize.height);
+  const [footPos, setFootPos] = useState(state.footSize.height);
+  const {
+    loading,
+    text,
+    editText,
+    checked,
+    reminderToggle,
+    reminders,
+    showFull,
+    wrapSize,
+    contSize,
+    footSize,
+  } = state;
+
+  const wrapperDivRef = useRef(null);
+  const containerDivRef = useRef(null);
+  const FooterivRef = useRef(null);
+  const inputRef = useRef(null);
+  const findWrapperPosition = () => {
+    if (wrapperDivRef.current) {
+      const xPos = wrapperDivRef.current.offsetLeft + window.scrollX;
+      const yPos = wrapperDivRef.current.offsetTop + window.scrollY;
+      console.log("WRAP", { wdidth: xPos, hieght: yPos });
+      console.log("appHeight", appHeight);
+      dispatch({
+        type: SET_WRAP_POSITION,
+        screenSize: yPos,
+      });
+      return yPos;
+    }
+  };
+
+  const findContainerPosition = () => {
+    if (containerDivRef.current) {
+      const xPos = containerDivRef.current.offsetLeft + window.scrollX;
+      const yPos = containerDivRef.current.offsetTop + window.scrollY;
+      console.log("CONTAIN", { wdidth: xPos, hieght: yPos });
+      dispatch({
+        type: SET_CONT_POSITION,
+        screenSize: yPos,
+      });
+      return yPos;
+    }
+  };
+
+  const findFooterPosition = () => {
+    if (FooterivRef.current) {
+      const xPos = FooterivRef.current.offsetLeft + window.scrollX;
+      const yPos = FooterivRef.current.offsetTop + window.scrollY;
+      console.log("FOOTER", { wdidth: xPos, hieght: yPos });
+      dispatch({
+        type: SET_FOOT_POSITION,
+        screenSize: yPos,
+      });
+      return yPos;
+    }
+  };
+
+  const appHeight = Math.round(footSize - contSize);
 
   //
   // useEffect() will call the api when the page first loads using the access token for auth
@@ -45,6 +111,17 @@ function Reminders() {
   useEffect(() => {
     getReminders(dispatch);
     dispatch({ type: SET_NAV, nav: "/reminders" });
+    findContainerPosition();
+    findWrapperPosition();
+    findFooterPosition();
+    window.addEventListener("scroll", findContainerPosition);
+    window.addEventListener("scroll", findWrapperPosition);
+    window.addEventListener("scroll", findFooterPosition);
+    return () => {
+      window.removeEventListener("scroll", findContainerPosition);
+      window.removeEventListener("scroll", findWrapperPosition);
+      window.removeEventListener("scroll", findContainerPosition);
+    };
   }, []);
 
   //
@@ -57,7 +134,7 @@ function Reminders() {
   };
 
   return (
-    <>
+    <div ref={wrapperDivRef} className="reminderWrapper">
       {loading && <div className="loadBar">I LOVE CHRISTINE</div>}
       <button
         className="addnewButton"
@@ -67,11 +144,10 @@ function Reminders() {
       >
         {showFull ? "shrink" : "grow"}
       </button>
-
       <br />
       <br />
       <br />
-      <div className="remindersContainer">
+      <div ref={containerDivRef} className="remindersContainer">
         <br />
         <h2>Reminders</h2>
         <br />
@@ -125,125 +201,77 @@ function Reminders() {
                 <br />
               </div>
             ))}
-        <div className="reminder">
-          <input
-            className="phantomCheckbox"
-            type="checkbox"
-            checked={checked}
-            onChange={() => dispatch({ type: SET_CHECKED, checked: checked })}
-          />
-          <TextareaAutosize
-            className="col-9 borderBottom mx-3 py-1 pl-2"
-            placeholder="Add new Reminder here..."
-            type="text"
-            defaultValue={""}
-            value={text}
-            onChange={(e) => {
-              dispatch({ type: SET_TEXT, text: e.target.value });
-            }}
-            onBlur={() => {
-              console.log("i love you chritine");
-              text !== "" && postReminder(dispatch, text, checked);
-            }}
-          />
-          <button
-            className="submitButton"
-            onClick={() => {
-              console.log("its a me MARIO");
-              text === "" && postReminder(dispatch, text, checked);
-            }}
-          >
-            +
-          </button>
-          <br />
-          <br />
-        </div>
-        {thotToggle ? (
-          <div>
-            <div
-              className="thotToggle"
-              onClick={() =>
-                dispatch({ type: SET_THOT_TOGGLE, thotToggle: thotToggle })
-              }
+
+        {/* NEW REMINDER */}
+        {reminderToggle ? (
+          <div lassName="reminder">
+            <input
+              className="phantomCheckbox"
+              type="checkbox"
+              checked={checked}
+              onChange={() => dispatch({ type: SET_CHECKED, checked: checked })}
+            />
+            <TextareaAutosize
+              ref={inputRef}
+              className="col-9 borderBottom mx-3 py-1 pl-2"
+              placeholder="Add new Reminder here..."
+              type="text"
+              defaultValue={""}
+              value={text}
+              onChange={(e) => {
+                dispatch({ type: SET_TEXT, text: e.target.value });
+              }}
+              onBlur={() => {
+                console.log("i love you chritine");
+                text !== "" && postReminder(dispatch, text, checked);
+                dispatch({
+                  type: SET_REMINDER_TOGGLE,
+                  reminderToggle: reminderToggle,
+                });
+              }}
+              autoFocus
+            />
+            <button
+              className="submitButton"
+              onClick={() => {
+                console.log("its a me MARIO");
+                text === "" && postReminder(dispatch, text, checked);
+              }}
             >
-              <br />
-              <div className="thotsHeader">
-                <i className="fa fa-angle-down" aria-hidden="true"></i>
-                <h4>&nbsp; thots &nbsp;</h4>
-                <i className="fa fa-angle-down" aria-hidden="true"></i>
-              </div>
-            </div>
-            {reminders.length > 0 &&
-              reminders
-                .filter((reminders) => reminders.recurring === true)
-                .map((reminder, index) => (
-                  <div className="reminder" key={reminder.id}>
-                    <input
-                      type="checkbox"
-                      checked={reminder.recurring}
-                      onChange={() =>
-                        reminderPut(
-                          dispatch,
-                          reminder.text,
-                          !reminder.recurring,
-                          reminder.id
-                        )
-                      }
-                    />
-                    <TextareaAutosize
-                      className="col-9 borderBottom textareaAutosize mx-3 py-1 pl-2"
-                      type="text"
-                      defaultValue={reminder.text}
-                      onChange={(e) => {
-                        dispatch({
-                          type: SET_EDIT_TEXT,
-                          editText: e.target.value,
-                        });
-                      }}
-                      onBlur={() => {
-                        editText !== "" &&
-                          reminderPut(
-                            dispatch,
-                            editText,
-                            reminder.recurring,
-                            reminder.id
-                          );
-                      }}
-                    />
-                    <button
-                      className="submitButton"
-                      onClick={() => {
-                        reminderDelete(dispatch, reminder.id);
-                      }}
-                    >
-                      X
-                    </button>
-                    <br />
-                    <br />
-                  </div>
-                ))}
+              +
+            </button>
+            <div
+              style={{ height: appHeight - 200 }}
+              onClick={() =>
+                dispatch({
+                  type: SET_REMINDER_TOGGLE,
+                  reminderToggle: !reminderToggle,
+                })
+              }
+            ></div>
           </div>
         ) : (
           <div
+            // 238
             onClick={() =>
-              dispatch({ type: SET_THOT_TOGGLE, thotToggle: thotToggle })
+              dispatch({
+                type: SET_REMINDER_TOGGLE,
+                reminderToggle: reminderToggle,
+              })
             }
-            className="thotToggle"
+            style={{ height: appHeight - 200 }}
           >
-            <br />
-            <div className="thotsHeader">
-              <i className="fa fa-angle-right" aria-hidden="true"></i>
-              <h4>&nbsp; thots &nbsp;</h4>
-              <i className="fa fa-angle-left" aria-hidden="true"></i>
-            </div>
+            hi
           </div>
         )}
       </div>
       <br />
       <br />
       <br />
-      <footer className="footer">thot.org</footer>
-    </>
+      <footer ref={FooterivRef} className="footer">
+        thot.org
+      </footer>
+    </div>
   );
 }
 

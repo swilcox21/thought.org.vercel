@@ -91,6 +91,10 @@
   display: flex;
   justify-content: center;
 }
+.reminderToggle {
+  width: 100%;
+  border: 1px dotted black;
+}
 .thotToggle {
   margin-top: -100px;
   text-align: middle;
@@ -106,7 +110,7 @@
 }
 @media (max-width: 650px) {
   .remindersContainer {
-    width: 90%;
+    width: 100%;
   }
 }
 

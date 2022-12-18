@@ -8,7 +8,24 @@ export default function reminderReducer(state = initialState, action) {
         loading: true,
       };
     }
-    // text
+    case SET_WRAP_POSITION: {
+      return {
+        ...state,
+        wrapperSize: action.screenSize,
+      };
+    }
+    case SET_CONT_POSITION: {
+      return {
+        ...state,
+        contSize: action.screenSize,
+      };
+    }
+    case SET_FOOT_POSITION: {
+      return {
+        ...state,
+        footSize: action.screenSize,
+      };
+    }
     case SET_TEXT: {
       return { ...state, text: action.text };
     }
@@ -33,10 +50,11 @@ export default function reminderReducer(state = initialState, action) {
     case SET_SHOW_FULL: {
       return { ...state, showFull: !action.showFull };
     }
-    // thotToggle
-    case SET_THOT_TOGGLE: {
-      return { ...state, thotToggle: !action.thotToggle };
+    // reminderToggle
+    case SET_REMINDER_TOGGLE: {
+      return { ...state, reminderToggle: !action.reminderToggle };
     }
+    // fuck
 
     // reminders
     case REMINDER_GET: {
@@ -105,9 +123,12 @@ export const EDIT_TEXT_RESET = "text/editTextReset";
 export const SET_CHECKED = "checked/setChecked";
 export const CHECKED_RESET = "checked/checkedReset";
 export const SET_SHOW_FULL = "showFull/setShowFull";
-export const SET_THOT_TOGGLE = "thotToggle/setThotToggle";
+export const SET_REMINDER_TOGGLE = "reminderToggle/setReminderToggle";
 export const REMINDER_GET = "reminder/reminderGet";
 export const REMINDER_POST = "reminder/reminderPost";
 export const REMINDER_PUT = "reminder/reminderPut";
 export const REMINDER_DELETE = "reminder/reminderDelete";
+export const SET_WRAP_POSITION = "wrap/wrapPosition";
+export const SET_CONT_POSITION = "cont/contPosition";
+export const SET_FOOT_POSITION = "foot/foot Position";
 // vercel

@@ -21,6 +21,7 @@ export default function rootReducer(state = initialState, action) {
         nav: action.nav,
       };
     }
+
     default:
       return state;
   }
@@ -29,4 +30,5 @@ export default function rootReducer(state = initialState, action) {
 export const LOADING = "loading/setLoading";
 export const SHOW_NAV = "showNav/setShowNav";
 export const SET_NAV = "nav/setNav";
+
 // vercel
