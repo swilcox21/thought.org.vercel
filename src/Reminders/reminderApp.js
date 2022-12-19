@@ -106,39 +106,7 @@ function Reminders(props) {
 
   const appHeight = Math.round(footSize - contSize);
   const [padSize, setPadSize] = useState(appHeight);
-  const [touchPosition, setTouchPosition] = useState(null);
-  const [touchStopPosition, setTouchStopPosition] = useState(null);
 
-  const handleTouchStart = (e) => {
-    const touchDown = e.touches[0].clientX;
-    setTouchPosition(touchDown);
-  };
-  // const handleTouchStop = (e) => {
-  //   const touchDown = touchPosition;
-  //   if (touchDown === null) {
-  //     return;
-  //   }
-  //   const currentTouch = e.touches[0].clientX;
-  //   const diff = touchDown - currentTouch;
-  //   setTouchStopPosition(touchDown);
-  // };
-  const handleTouchMove = (e) => {
-    const touchDown = touchPosition;
-    if (touchDown === null) {
-      return;
-    }
-    const currentTouch = e.touches[0].clientX;
-    const diff = touchDown - currentTouch;
-    if (diff > 5) {
-      setTouchStopPosition(diff);
-      window.location = redirectURL + "reminders";
-    }
-    if (diff < -5) {
-      setTouchStopPosition(diff);
-      window.location = redirectURL + "thots";
-    }
-    setTouchPosition(null);
-  };
   //
   // useEffect() will call the api when the page first loads using the access token for auth
   // if it exists in the cache, else it will use refreshToken() to return a new access token
@@ -276,7 +244,7 @@ function Reminders(props) {
               onClick={() =>
                 dispatch({
                   type: SET_REMINDER_TOGGLE,
-                  reminderToggle: !reminderToggle,
+                  reminderToggle: false,
                 })
               }
             ></div>
@@ -284,14 +252,12 @@ function Reminders(props) {
         ) : (
           <div
             // 238
-            // onClick={() =>
-            //   dispatch({
-            //     type: SET_REMINDER_TOGGLE,
-            //     reminderToggle: reminderToggle,
-            //   })
-            // }
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
+            onClick={() =>
+              dispatch({
+                type: SET_REMINDER_TOGGLE,
+                reminderToggle: reminderToggle,
+              })
+            }
             style={{ height: appHeight - 200 }}
           >
             hi

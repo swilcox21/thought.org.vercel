@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer, { SET_NAV } from "./store";
 import { redirectURL } from ".";
+import { SET_REMINDER_TOGGLE } from "./Reminders/reminderReducer";
 
 function App() {
   const initialState = {
@@ -31,7 +32,10 @@ function App() {
   const handleTouchMove = (e) => {
     const touchDown = touchPosition;
     if (touchDown === null) {
-      return;
+      dispatch({
+        type: SET_REMINDER_TOGGLE,
+        reminderToggle: true,
+      });
     }
     const currentTouch = e.touches[0].clientX;
     const diff = touchDown - currentTouch;
