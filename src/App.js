@@ -8,7 +8,7 @@ import Reminders from "./Reminders/reminderApp";
 import Thots from "./thots/thotsApp";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";
-import rootReducer from "./store";
+import rootReducer, { SET_NAV } from "./store";
 import { redirectURL } from ".";
 
 function App() {
@@ -18,6 +18,8 @@ function App() {
     nav: window.location.pathname,
   };
   useEffect(() => {
+    dispatch({ type: SET_NAV, nav: window.location.pathname });
+
     console.log("PROPS:", window.location.pathname);
   }, []);
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);

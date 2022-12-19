@@ -113,7 +113,7 @@ function Reminders(props) {
   //
   useEffect(() => {
     getReminders(dispatch);
-    dispatch({ type: SET_NAV, nav: "/reminders" });
+    dispatch({ type: SET_NAV, nav: window.location.pathname });
     findContainerPosition();
     findWrapperPosition();
     findFooterPosition();
@@ -203,7 +203,7 @@ function Reminders(props) {
 
         {/* NEW REMINDER */}
         {reminderToggle ? (
-          <div lassName="reminder">
+          <div>
             <input
               className="phantomCheckbox"
               type="checkbox"

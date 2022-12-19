@@ -42,9 +42,8 @@ function Thots(props) {
   // if it exists in the cache, else it will use refreshToken() to return a new access token
   //
   useEffect(() => {
-    dispatch({ type: SET_NAV, nav: "/thots" });
+    dispatch({ type: SET_NAV, nav: window.location.pathname });
     getReminders(dispatch);
-    console.log("PROPS:", props);
   }, []);
 
   //

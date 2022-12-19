@@ -8,7 +8,6 @@ import {
 } from "./reminderReducer";
 import { baseURL, redirectURL } from "..";
 
-// RETREIVE EXPIRED ACCESS TOKEN WITH THIS REFRESH TOKEN FUNCTION
 export async function refreshAccessToken(dispatch) {
   const body = { refresh: localStorage.getItem("refresh") };
   await axios
@@ -43,7 +42,6 @@ export async function getReminders(dispatch) {
       dispatch({
         type: REMINDER_GET,
         reminders: response.data,
-        // ...response.body,
       });
     })
     .catch((err) => {
@@ -51,15 +49,12 @@ export async function getReminders(dispatch) {
     });
 }
 
-// POST
 export function postReminder(dispatch, text, recurring) {
   dispatch({ type: LOADING });
   const data = {
     text: text,
     recurring: recurring,
   };
-  // declaring the post request here but not calling it quite yet so I can call it multiple times later without having to rewrite the entire function DRY
-  // when more models are present can write this somewhere else (like reducers) and reuse for all the different api url locations...
   async function postRequest(data) {
     await axios
       .post(`${baseURL}/reminder/`, data, {
@@ -79,12 +74,7 @@ export function postReminder(dispatch, text, recurring) {
           text: response.data.text,
         });
       });
-    // .catch() will be called later because this function requires multiple different catches
-    // 1. CATCH REFRESH:    for the refresh token which will happen by design quite often
-    // 2. CATCH ALL ELSE:   for any other reason that an API might fail
   }
-  // actual post request call here followed by the REFRESH CATCH
-  // recalling post request with the new acces token from the refresh() return followed by the CATCH ALL ELSE
   postRequest(data).catch((err) => {
     console.log(err);
     refreshAccessToken(dispatch).then(() => {
@@ -96,8 +86,7 @@ export function postReminder(dispatch, text, recurring) {
   });
 }
 
-// PUT
-export async function reminderPut(dispatch, text, recurring, reminder_id) {
+export function reminderPut(dispatch, text, recurring, reminder_id) {
   dispatch({ type: LOADING });
   const data = {
     text: text,
@@ -111,15 +100,17 @@ export async function reminderPut(dispatch, text, recurring, reminder_id) {
         },
       })
       .then((response) => {
-        dispatch({
-          type: REMINDER_PUT,
-          id: response.data.id,
-          owner: response.data.owner,
-          created_date: response.data.date,
-          due_date: response.data.date,
-          recurring: response.data.recurring,
-          text: "",
-        });
+        getReminders(dispatch);
+        // console.log("PUTREQUEST:", response.data);
+        // dispatch({
+        //   type: REMINDER_PUT,
+        //   id: response.data.id,
+        //   owner: response.data.owner,
+        //   created_date: response.data.date,
+        //   due_date: response.data.date,
+        //   recurring: response.data.recurring,
+        //   text: "",
+        // });
       });
   }
   putRequest(data).catch((err) => {
@@ -133,7 +124,6 @@ export async function reminderPut(dispatch, text, recurring, reminder_id) {
   });
 }
 
-// DELETE
 export async function reminderDelete(dispatch, reminder_id) {
   dispatch({ type: LOADING });
   async function deleteRequest() {
@@ -160,4 +150,3 @@ export async function reminderDelete(dispatch, reminder_id) {
     });
   });
 }
-// vercel

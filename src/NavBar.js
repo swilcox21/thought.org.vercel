@@ -14,7 +14,7 @@ const handleLogout = () => {
 
 export function NavBar(props) {
   const initialState = {
-    nav: "",
+    // nav: "",
   };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
 
@@ -40,9 +40,11 @@ export function NavBar(props) {
             </button>
           </Link>
         )}{" "}
-        <button className="thotsButton" onClick={() => handleLogout()}>
-          &nbsp;logout&nbsp;
-        </button>
+        <Link to="/">
+          <button className="thotsButton" onClick={() => handleLogout()}>
+            &nbsp;logout&nbsp;
+          </button>
+        </Link>
       </div>
     </>
   );

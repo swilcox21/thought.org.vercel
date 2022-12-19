@@ -42,8 +42,9 @@
 }
 /* logoutButton */
 .logoutButton {
-  margin: 5%;
+  margin: 4%;
   width: 80px;
+  min-height: 60px;
 }
 .remindersButton {
   margin: 4%;

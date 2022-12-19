@@ -98,7 +98,7 @@ export default function reminderReducer(state = initialState, action) {
           },
         ],
         loading: false,
-        text: "",
+        editText: "",
       };
     }
     case REMINDER_DELETE: {
