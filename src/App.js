@@ -50,6 +50,14 @@ function App() {
     setTouchPosition(null);
   };
   const handleTouchEnd = (e) => {
+    const touchDown = touchPosition;
+    if (touchDown === null) {
+      dispatch({
+        type: SET_REMINDER_TOGGLE,
+        reminderToggle: true,
+      });
+      return;
+    }
     if (touchStopPosition > 5) window.location = redirectURL + "thots";
     if (touchStopPosition < -5) window.location = redirectURL + "reminders";
   };
