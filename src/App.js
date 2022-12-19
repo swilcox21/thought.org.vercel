@@ -45,8 +45,8 @@ function App() {
     setTouchPosition(null);
   };
   const handleTouchEnd = (e) => {
-    const touchDown = touchPosition;
-    if (touchDown === null) {
+    // const touchDown = touchPosition;
+    if (touchStopPosition === null) {
       dispatch({
         type: SET_REMINDER_TOGGLE,
         reminderToggle: true,
