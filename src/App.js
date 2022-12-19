@@ -15,8 +15,11 @@ function App() {
   const initialState = {
     loading: false,
     showNav: false,
-    nav: "/reminders",
+    nav: window.location.pathname,
   };
+  useEffect(() => {
+    console.log("PROPS:", window.location.pathname);
+  }, []);
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
   return (

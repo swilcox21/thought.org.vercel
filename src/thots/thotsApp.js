@@ -11,7 +11,7 @@ import {
   postReminder,
   reminderPut,
   reminderDelete,
-} from "./actions";
+} from "../Reminders/actions";
 import reducer, {
   SET_TEXT,
   SET_EDIT_TEXT,
@@ -20,11 +20,10 @@ import reducer, {
   SET_THOT_TOGGLE,
 } from "./thotReducer";
 import SET_NAV from "../store";
-import { development, dev, prod } from "..";
 
 // REMINDERS
 
-function Thots() {
+function Thots(props) {
   const initialState = {
     loading: false,
     text: "",
@@ -45,16 +44,12 @@ function Thots() {
   useEffect(() => {
     dispatch({ type: SET_NAV, nav: "/thots" });
     getReminders(dispatch);
+    console.log("PROPS:", props);
   }, []);
 
   //
   //  handleLogout() clears tokens from the cache and returns the user to the login screen
   //
-  const handleLogout = () => {
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("access");
-    window.location = development ? dev : prod;
-  };
 
   return (
     <>

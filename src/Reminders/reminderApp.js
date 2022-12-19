@@ -23,12 +23,12 @@ import reducer, {
   SET_CONT_POSITION,
   SET_FOOT_POSITION,
 } from "./reminderReducer";
-import { development, dev, prod } from "..";
+import { redirectURL } from "..";
 import { SET_NAV } from "../store";
 
 // REMINDERS
 
-function Reminders() {
+function Reminders(props) {
   const initialState = {
     loading: false,
     text: "",
@@ -117,6 +117,7 @@ function Reminders() {
     findContainerPosition();
     findWrapperPosition();
     findFooterPosition();
+    console.log("PROPS:", props);
     window.addEventListener("scroll", findContainerPosition);
     window.addEventListener("scroll", findWrapperPosition);
     window.addEventListener("scroll", findFooterPosition);
@@ -130,11 +131,6 @@ function Reminders() {
   //
   //  handleLogout() clears tokens from the cache and returns the user to the login screen
   //
-  const handleLogout = () => {
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("access");
-    window.location = development ? dev : prod;
-  };
 
   return (
     <div ref={wrapperDivRef} className="reminderWrapper">

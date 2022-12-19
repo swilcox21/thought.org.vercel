@@ -2,32 +2,26 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Navigate, Link } from "react-router-dom";
 import { SHOW_NAV, SET_NAV } from "./store";
-import { development, dev, prod } from "./index";
+import { redirectURL } from "./index";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer from "./store";
 import "./App.css";
 const handleLogout = () => {
   localStorage.removeItem("refresh");
   localStorage.removeItem("access");
-  window.location = development ? dev + "login" : prod + "login";
+  window.location = redirectURL;
 };
 
 export function NavBar(props) {
   const initialState = {
-    nav: "/reminders",
+    nav: "",
   };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
 
   return (
     <>
-      <div
-        className="showNav"
-        onclick={() => {
-          console.log(state.nav);
-          dispatch({ type: SET_NAV, nav: "/reminders" });
-        }}
-      >
-        {state.nav === "/thots" ? (
+      <div className="showNav">
+        {window.location.pathname === "/thots" ? (
           <Link to="/reminders">
             <button
               className="thotsButton"

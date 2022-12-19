@@ -13,8 +13,7 @@ export const development = false;
 export const redirectURL = development
   ? "http://localhost:3001/"
   : "https://thought-org.vercel.app/";
-export const dev = "http://localhost:3001/";
-export const prod = "https://thought-org.vercel.app/";
+
 export const baseURL = "https://thorgapi.herokuapp.com";
 
 export const store = configureStore({
