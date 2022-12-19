@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Navigator } from "./Navigator";
+import { Navigate, Link } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import Login from "./Login";
 import Reminders from "./Reminders/reminderApp";
@@ -42,18 +43,24 @@ function App() {
     const diff = touchDown - currentTouch;
     if (diff > 5) {
       setTouchStopPosition(diff);
-      window.location = redirectURL + "thots";
     }
     if (diff < -5) {
       setTouchStopPosition(diff);
-      window.location = redirectURL + "reminders";
     }
     setTouchPosition(null);
+  };
+  const handleTouchEnd = (e) => {
+    if (touchStopPosition > 5) window.location = redirectURL + "thots";
+    if (touchStopPosition < -5) window.location = redirectURL + "reminders";
   };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
   return (
-    <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <BrowserRouter>
         {window.location.href === redirectURL + "login" ? null : (
           <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
