@@ -37,11 +37,11 @@ function App() {
     const diff = touchDown - currentTouch;
     if (diff > 5) {
       setTouchStopPosition(diff);
-      window.location = redirectURL + "reminders";
+      window.location = redirectURL + "thots";
     }
     if (diff < -5) {
       setTouchStopPosition(diff);
-      window.location = redirectURL + "thots";
+      window.location = redirectURL + "reminders";
     }
     setTouchPosition(null);
   };
