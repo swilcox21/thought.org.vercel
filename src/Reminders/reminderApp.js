@@ -68,6 +68,7 @@ function Reminders() {
       const yPos = wrapperDivRef.current.offsetTop + window.scrollY;
       console.log("WRAP", { wdidth: xPos, hieght: yPos });
       console.log("appHeight", appHeight);
+      setPadSize(appHeight);
       dispatch({
         type: SET_WRAP_POSITION,
         screenSize: yPos,
@@ -81,6 +82,7 @@ function Reminders() {
       const xPos = containerDivRef.current.offsetLeft + window.scrollX;
       const yPos = containerDivRef.current.offsetTop + window.scrollY;
       console.log("CONTAIN", { wdidth: xPos, hieght: yPos });
+
       dispatch({
         type: SET_CONT_POSITION,
         screenSize: yPos,
@@ -103,6 +105,7 @@ function Reminders() {
   };
 
   const appHeight = Math.round(footSize - contSize);
+  const [padSize, setPadSize] = useState(appHeight);
 
   //
   // useEffect() will call the api when the page first loads using the access token for auth

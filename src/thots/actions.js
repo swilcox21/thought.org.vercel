@@ -6,7 +6,7 @@ import {
   REMINDER_PUT,
   REMINDER_DELETE,
 } from "./thotReducer";
-import { baseURL } from "..";
+import { baseURL, redirectURL } from "..";
 
 // RETREIVE EXPIRED ACCESS TOKEN WITH THIS REFRESH TOKEN FUNCTION
 export async function refreshAccessToken(dispatch) {
@@ -26,8 +26,7 @@ export async function refreshAccessToken(dispatch) {
       localStorage.removeItem("refresh");
       localStorage.removeItem("access");
       alert("your session has expired please log back in");
-      window.location = "http://localhost:3001/login";
-      // window.location = "https://thought-org.vercel.app/login";
+      window.location = redirectURL + "login";
     });
 }
 

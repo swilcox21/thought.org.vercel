@@ -9,7 +9,7 @@ import Thots from "./thots/thotsApp";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useThunkReducer } from "react-hook-thunk-reducer";
 import rootReducer from "./store";
-import { prod, dev, development } from ".";
+import { redirectURL } from ".";
 
 function App() {
   const initialState = {
