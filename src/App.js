@@ -53,8 +53,8 @@ function App() {
       });
       return;
     }
-    if (touchStopPosition > 5) window.location = redirectURL + "thots";
-    if (touchStopPosition < -5) window.location = redirectURL + "reminders";
+    if (touchStopPosition > 60) window.location = redirectURL + "thots";
+    if (touchStopPosition < -60) window.location = redirectURL + "reminders";
   };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
