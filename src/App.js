@@ -19,13 +19,36 @@ function App() {
   };
   useEffect(() => {
     dispatch({ type: SET_NAV, nav: window.location.pathname });
-
     console.log("PROPS:", window.location.pathname);
   }, []);
+  const [touchPosition, setTouchPosition] = useState(null);
+  const [touchStopPosition, setTouchStopPosition] = useState(null);
+
+  const handleTouchStart = (e) => {
+    const touchDown = e.touches[0].clientX;
+    setTouchPosition(touchDown);
+  };
+  const handleTouchMove = (e) => {
+    const touchDown = touchPosition;
+    if (touchDown === null) {
+      return;
+    }
+    const currentTouch = e.touches[0].clientX;
+    const diff = touchDown - currentTouch;
+    if (diff > 5) {
+      setTouchStopPosition(diff);
+      window.location = redirectURL + "reminders";
+    }
+    if (diff < -5) {
+      setTouchStopPosition(diff);
+      window.location = redirectURL + "thots";
+    }
+    setTouchPosition(null);
+  };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
   return (
-    <>
+    <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
       <BrowserRouter>
         {window.location.href === redirectURL + "login" ? null : (
           <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
@@ -37,7 +60,7 @@ function App() {
           <Route path="/thots" element={<Thots nav={nav} />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   );
 }
 
