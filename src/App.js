@@ -36,6 +36,7 @@ function App() {
         type: SET_REMINDER_TOGGLE,
         reminderToggle: true,
       });
+      return;
     }
     const currentTouch = e.touches[0].clientX;
     const diff = touchDown - currentTouch;
