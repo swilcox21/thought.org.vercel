@@ -32,20 +32,15 @@ function App() {
   };
   const handleTouchMove = (e) => {
     const touchDown = touchPosition;
-    if (touchDown === null) {
-      dispatch({
-        type: SET_REMINDER_TOGGLE,
-        reminderToggle: true,
-      });
-      return;
-    }
     const currentTouch = e.touches[0].clientX;
     const diff = touchDown - currentTouch;
     if (diff > 5) {
       setTouchStopPosition(diff);
+      return;
     }
     if (diff < -5) {
       setTouchStopPosition(diff);
+      return;
     }
     setTouchPosition(null);
   };
@@ -64,23 +59,23 @@ function App() {
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
   return (
-    <div
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      <BrowserRouter>
-        {window.location.href === redirectURL + "login" ? null : (
-          <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
-        )}
+    <BrowserRouter>
+      {window.location.href === redirectURL + "login" ? null : (
+        <NavBar showNav={showNav} dispatch={dispatch} nav={nav} />
+      )}{" "}
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <Routes>
           <Route path="/" element={<Navigator nav={nav} />} />
           <Route path="/login" element={<Login nav={nav} />} />
           <Route path="/reminders" element={<Reminders nav={nav} />} />
           <Route path="/thots" element={<Thots nav={nav} />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
