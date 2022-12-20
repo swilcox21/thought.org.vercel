@@ -5,6 +5,7 @@ import {
   REMINDER_POST,
   REMINDER_PUT,
   REMINDER_DELETE,
+  SET_EDIT_TEXT,
 } from "./reminderReducer";
 import { baseURL, redirectURL } from "..";
 
@@ -101,6 +102,7 @@ export function reminderPut(dispatch, text, recurring, reminder_id) {
       })
       .then((response) => {
         getReminders(dispatch);
+        dispatch({ type: SET_EDIT_TEXT, editText: "" });
         // console.log("PUTREQUEST:", response.data);
         // dispatch({
         //   type: REMINDER_PUT,

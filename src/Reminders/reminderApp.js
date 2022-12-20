@@ -186,6 +186,7 @@ function Reminders(props) {
                         reminder.recurring,
                         reminder.id
                       );
+                    dispatch({ type: SET_EDIT_TEXT, editText: "" });
                   }}
                 />
                 <button
