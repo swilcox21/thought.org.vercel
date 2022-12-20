@@ -19,12 +19,13 @@ function App() {
     showNav: false,
     nav: window.location.pathname,
   };
-  useEffect(() => {
-    dispatch({ type: SET_NAV, nav: window.location.pathname });
-    console.log("PROPS:", window.location.pathname);
-  }, []);
+  // useEffect(() => {
+  //   dispatch({ type: SET_NAV, nav: window.location.pathname });
+  //   console.log("PROPS:", window.location.pathname);
+  // }, []);
   const [touchPosition, setTouchPosition] = useState(null);
   const [touchStopPosition, setTouchStopPosition] = useState(null);
+  const [swipeNav, setSwipNav] = useState("");
 
   const handleTouchStart = (e) => {
     const touchDown = e.touches[0].clientX;
@@ -42,7 +43,6 @@ function App() {
       setTouchStopPosition(diff);
       return;
     }
-    setTouchPosition(null);
   };
   const handleTouchEnd = (e) => {
     // const touchDown = touchPosition;
@@ -58,13 +58,23 @@ function App() {
         type: SET_REMINDER_TOGGLE,
         reminderToggle: true,
       });
+    setTouchPosition(null);
     if (touchStopPosition >= -60)
       dispatch({
         type: SET_REMINDER_TOGGLE,
         reminderToggle: true,
       });
-    if (touchStopPosition > 60) window.location = redirectURL + "thots";
-    if (touchStopPosition < -60) window.location = redirectURL + "reminders";
+    setTouchPosition(null);
+    if (touchStopPosition > 60) {
+      setTouchPosition(null);
+      window.location = redirectURL + "thots";
+    }
+    if (touchStopPosition < -60) {
+      setTouchPosition(null);
+      window.location = redirectURL + "reminders";
+    }
+    // if (touchStopPosition > 60) setSwipNav("thots");
+    // if (touchStopPosition < -60) setSwipNav("reminders");
   };
   const [state, dispatch] = useThunkReducer(rootReducer, initialState);
   const { loading, showNav, nav } = state;
