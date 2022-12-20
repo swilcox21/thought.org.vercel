@@ -53,6 +53,16 @@ function App() {
       });
       return;
     }
+    if (touchStopPosition <= 60)
+      dispatch({
+        type: SET_REMINDER_TOGGLE,
+        reminderToggle: true,
+      });
+    if (touchStopPosition >= -60)
+      dispatch({
+        type: SET_REMINDER_TOGGLE,
+        reminderToggle: true,
+      });
     if (touchStopPosition > 60) window.location = redirectURL + "thots";
     if (touchStopPosition < -60) window.location = redirectURL + "reminders";
   };
