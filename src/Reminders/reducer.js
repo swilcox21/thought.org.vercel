@@ -8,6 +8,12 @@ export default function reminderReducer(state = initialState, action) {
         loading: true,
       };
     }
+    case DASHBOARD: {
+      return {
+        ...state,
+        dashboard: action.dashboard,
+      };
+    }
     case SET_WRAP_POSITION: {
       return {
         ...state,
@@ -49,6 +55,10 @@ export default function reminderReducer(state = initialState, action) {
     // showFull
     case SET_SHOW_FULL: {
       return { ...state, showFull: !action.showFull };
+    }
+    // showDash
+    case SET_SHOW_DASH: {
+      return { ...state, showDash: !action.showDash };
     }
     // reminderToggle
     case SET_REMINDER_TOGGLE: {
@@ -116,12 +126,14 @@ export default function reminderReducer(state = initialState, action) {
 }
 
 export const LOADING = "reminder/loadStart";
+export const DASHBOARD = "reminder/dashboard";
 export const SET_TEXT = "text/setText";
 export const TEXT_RESET = "text/textreset";
 export const SET_EDIT_TEXT = "text/editText";
 export const EDIT_TEXT_RESET = "text/editTextReset";
 export const SET_CHECKED = "checked/setChecked";
 export const CHECKED_RESET = "checked/checkedReset";
+export const SET_SHOW_DASH = "showFull/setShowFull";
 export const SET_SHOW_FULL = "showFull/setShowFull";
 export const SET_REMINDER_TOGGLE = "reminderToggle/setReminderToggle";
 export const REMINDER_GET = "reminder/reminderGet";

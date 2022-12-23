@@ -6,35 +6,37 @@ import React, { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { useThunkReducer } from "react-hook-thunk-reducer";
-import {
-  getReminders,
-  postReminder,
-  reminderPut,
-  reminderDelete,
-} from "./actions";
-
+import { deleteReminder } from "./actions/apiCalls/delete";
+import { getReminders } from "./actions/apiCalls/get";
+import { postReminder } from "./actions/apiCalls/post";
+import { putReminder } from "./actions/apiCalls/put";
 import reducer, {
   SET_TEXT,
   SET_EDIT_TEXT,
   SET_CHECKED,
   SET_SHOW_FULL,
+  SET_SHOW_DASH,
   SET_REMINDER_TOGGLE,
   SET_WRAP_POSITION,
   SET_CONT_POSITION,
   SET_FOOT_POSITION,
-} from "./reminderReducer";
-import { redirectURL } from "..";
+  DASHBOARD,
+} from "./reducer";
+import { store } from "..";
 import { SET_NAV } from "../store";
-
+import { Link, Route } from "react-router-dom";
+import Dashboard from "./components/dashboard";
 // REMINDERS
 
 function Reminders(props) {
   const initialState = {
     loading: false,
+    dashboard: null,
     text: "",
     editText: "",
     checked: false,
     showFull: false,
+    showDash: false,
     reminderToggle: false,
     reminders: [],
     wrapSize: {},
@@ -47,11 +49,13 @@ function Reminders(props) {
   const [footPos, setFootPos] = useState(state.footSize.height);
   const {
     loading,
+    dashboard,
     text,
     editText,
     checked,
     reminderToggle,
     reminders,
+    showDash,
     showFull,
     wrapSize,
     contSize,
@@ -62,6 +66,7 @@ function Reminders(props) {
   const containerDivRef = useRef(null);
   const FooterivRef = useRef(null);
   const inputRef = useRef(null);
+
   const findWrapperPosition = () => {
     if (wrapperDivRef.current) {
       const xPos = wrapperDivRef.current.offsetLeft + window.scrollX;
@@ -106,7 +111,6 @@ function Reminders(props) {
 
   const appHeight = Math.round(footSize - contSize);
   const [padSize, setPadSize] = useState(appHeight);
-
   //
   // useEffect() will call the api when the page first loads using the access token for auth
   // if it exists in the cache, else it will use refreshToken() to return a new access token
@@ -135,31 +139,80 @@ function Reminders(props) {
   return (
     <div ref={wrapperDivRef} className="reminderWrapper">
       {loading && <div className="loadBar">I LOVE CHRISTINE</div>}
-      <button
-        className="addnewButton"
-        onClick={() => {
-          dispatch({ type: SET_SHOW_FULL, showFull: showFull });
-        }}
-      >
-        {showFull ? "shrink" : "grow"}
-      </button>
-      <br />
-      <br />
+      {dashboard !== null && (
+        <div style={{ margin: "auto", marginTop: "10%", width: "70%" }}>
+          <Dashboard
+            dispatch={dispatch}
+            editText={state.editText}
+            dashboard={dashboard}
+          />
+        </div>
+      )}
+      <div className="subNavHeader">
+        <button
+          className="addnewButton"
+          onClick={() => {
+            dispatch({ type: SET_SHOW_FULL, showFull: showFull });
+          }}
+        >
+          {showFull ? "shrink" : "grow"}
+        </button>
+        {dashboard !== null && (
+          <button
+            style={{ margin: "auto", maxHeight: "40px" }}
+            onClick={() => {
+              dispatch({ type: DASHBOARD, dashboard: null });
+            }}
+          >
+            clearDash
+          </button>
+        )}
+        {props.dashboard ? (
+          <button className="addnewButton">
+            <Link
+              style={{ textDecoration: "none", color: "black" }}
+              to="/reminders"
+            >
+              {showDash ? "dash" : "board"}
+            </Link>
+          </button>
+        ) : (
+          <button className="addnewButton">
+            <Link
+              style={{ textDecoration: "none", color: "black" }}
+              to="/reminders/dashboard"
+            >
+              {showDash ? "dash" : "board"}
+            </Link>
+          </button>
+        )}
+      </div>
       <br />
       <div ref={containerDivRef} className="remindersContainer">
-        <br />
-        <h2>Reminders</h2>
-        <br />
         {reminders.length > 0 &&
           reminders
-            .filter((reminders) => reminders.recurring === false)
+            .filter((reminder) =>
+              (reminder.recurring === false) & (dashboard !== null)
+                ? reminder.id !== dashboard.reminder.id
+                : reminder.recurring === false
+            )
             .map((reminder, index) => (
               <div className="reminder" key={reminder.id}>
+                {props.dashboard && (
+                  <button
+                    className="dashButton"
+                    onClick={() => {
+                      dispatch({ type: DASHBOARD, dashboard: { reminder } });
+                    }}
+                  >
+                    D
+                  </button>
+                )}
                 <input
                   type="checkbox"
                   checked={reminder.recurring}
                   onChange={() =>
-                    reminderPut(
+                    putReminder(
                       dispatch,
                       reminder.text,
                       !reminder.recurring,
@@ -180,7 +233,7 @@ function Reminders(props) {
                   }}
                   onBlur={() => {
                     editText !== "" &&
-                      reminderPut(
+                      putReminder(
                         dispatch,
                         editText,
                         reminder.recurring,
@@ -192,7 +245,7 @@ function Reminders(props) {
                 <button
                   className="submitButton"
                   onClick={() => {
-                    reminderDelete(dispatch, reminder.id);
+                    deleteReminder(dispatch, reminder.id);
                   }}
                 >
                   X
@@ -260,9 +313,7 @@ function Reminders(props) {
               })
             }
             style={{ height: appHeight - 200 }}
-          >
-            hi
-          </div>
+          ></div>
         )}
       </div>
       <br />

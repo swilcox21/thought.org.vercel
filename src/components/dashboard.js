@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
-import '../App.css';
-import React, { useState } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
-import PropTypes from 'prop-types';
+import "../App.css";
+import React, { useState } from "react";
+import TextareaAutosize from "react-textarea-autosize";
+import PropTypes from "prop-types";
 
 function Dashboard(props) {
-  const [thought, setThought] = useState(props.thought.thought);
-  const [dashboard, setDashboard] = useState(props.thought.dashboard);
+  const [thought, setThought] = useState(props.reminder.text);
+  const [dashboard, setDashboard] = useState(props.reminder.dashboard);
   const [allFolder, setAllFolder] = useState(props.allFolders);
 
   return (
@@ -19,28 +19,28 @@ function Dashboard(props) {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          &nbsp;&nbsp;
-          {props.thought.folder.name} &lt;
+          example
         </span>
-        <div className="dropdown-menu text-center" aria-labelledby="dropdownMenuButton">
-          <small className="borderBottom">{props.folder.name}</small>
+        <div
+          className="dropdown-menu text-center"
+          aria-labelledby="dropdownMenuButton"
+        >
+          {/* <small className="borderBottom">{props.folder.name}</small> */}
           <br />
           <div
             className="text-center"
-            onClick={() =>
-              props.thoughtPut(
-                props.thought.id,
-                props.thought.thought,
-                !props.thought.dashboard,
-                props.thought.folder.id,
-              )
-            }
+            // onClick={() =>
+            //   props.thoughtPut(
+            //     props.thought.id,
+            //     props.thought.thought,
+            //     !props.thought.dashboard,
+            //     props.thought.folder.id,
+            //   )
+            // }
           >
             DB
           </div>
-          <div className="text-center" onClick={() => props.thoughtDelete(props.thought.id)}>
-            X
-          </div>
+          <div className="text-center">X</div>
         </div>
       </div>
       <div className="mx-auto text-center">
@@ -50,14 +50,19 @@ function Dashboard(props) {
           placeholder="Type your Thought here"
           type="text"
           defaultValue={props.thought.thought}
-          onChange={(e) => {
-            setThought(e.target.value);
-            setDashboard(props.thought.dashboard);
-          }}
-          onBlur={(e) =>
-            thought !== props.thought.thought &&
-            props.thoughtPut(props.thought.id, thought, props.thought.dashboard, props.folder.id)
-          }
+          // onChange={(e) => {
+          //   setThought(e.target.value);
+          //   setDashboard(props.thought.dashboard);
+          // }}
+          // onBlur={(e) =>
+          //   thought !== props.thought.thought &&
+          //   props.thoughtPut(
+          //     props.thought.id,
+          //     thought,
+          //     props.thought.dashboard,
+          //     props.folder.id
+          //   )
+          // }
         />
       </div>
     </>

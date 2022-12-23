@@ -1,6 +1,7 @@
 .App {
   min-height: 100vh;
 }
+
 .loadBar {
   position: fixed;
   z-index: 100;
@@ -74,11 +75,18 @@
   margin: auto;
   text-align: center;
 }
+.dashButton {
+  margin-right: 5px;
+}
 .reminder {
   margin: auto;
   display: flex;
   align-items: baseline;
   justify-content: center;
+}
+.reminderWrapper {
+  display: flex;
+  flex-direction: column;
 }
 .reminderTextArea {
   max-height: 34px;
@@ -95,6 +103,12 @@
 .reminderToggle {
   width: 100%;
   border: 1px dotted black;
+}
+.subNavHeader {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 .thotToggle {
   margin-top: -100px;

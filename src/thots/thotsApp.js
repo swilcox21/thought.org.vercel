@@ -6,12 +6,10 @@ import React, { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useDispatch, useSelector } from "react-redux";
 import { useThunkReducer } from "react-hook-thunk-reducer";
-import {
-  getReminders,
-  postReminder,
-  reminderPut,
-  reminderDelete,
-} from "../Reminders/actions";
+import { deleteReminder } from "../Reminders/actions/apiCalls/delete";
+import { getReminders } from "../Reminders/actions/apiCalls/get";
+import { postReminder } from "../Reminders/actions/apiCalls/post";
+import { putReminder } from "../Reminders/actions/apiCalls/put";
 import reducer, {
   SET_TEXT,
   SET_EDIT_TEXT,
@@ -29,13 +27,11 @@ function Thots(props) {
     text: "",
     editText: "",
     checked: true,
-    showFull: false,
-    thotToggle: true,
+    thotToggle: false,
     reminders: [],
   };
   const [state, dispatch] = useThunkReducer(reducer, initialState);
-  const { loading, text, editText, checked, thotToggle, reminders, showFull } =
-    state;
+  const { loading, text, editText, checked, thotToggle, reminders } = state;
 
   //
   // useEffect() will call the api when the page first loads using the access token for auth
@@ -124,7 +120,7 @@ function Thots(props) {
                       type="checkbox"
                       checked={reminder.recurring}
                       onChange={() =>
-                        reminderPut(
+                        putReminder(
                           dispatch,
                           reminder.text,
                           !reminder.recurring,
@@ -144,7 +140,7 @@ function Thots(props) {
                       }}
                       onBlur={() => {
                         editText !== "" &&
-                          reminderPut(
+                          putReminder(
                             dispatch,
                             editText,
                             reminder.recurring,
@@ -155,7 +151,7 @@ function Thots(props) {
                     <button
                       className="submitButton"
                       onClick={() => {
-                        reminderDelete(dispatch, reminder.id);
+                        deleteReminder(dispatch, reminder.id);
                       }}
                     >
                       X

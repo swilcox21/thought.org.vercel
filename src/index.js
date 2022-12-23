@@ -4,9 +4,14 @@ import "./index.css";
 import App from "./App";
 import { Provider } from "react-redux";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import reminderReducer from "./Reminders/reminderReducer";
+import reminderReducer from "./Reminders/reducer";
 import thotReducer from "./thots/thotReducer";
-import rootReducer from "./store";
+import appReducer from "./store";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { PersistGate } from "redux-persist/integration/react";
+import { createBrowserHistory } from "history";
+import usePersistedReducer from "./usePersistantReducer";
 
 export const development = false;
 
@@ -16,9 +21,19 @@ export const redirectURL = development
 
 export const baseURL = "https://thorgapi.herokuapp.com";
 
-export const store = configureStore({
-  reducer: combineReducers({ reminderReducer, rootReducer, thotReducer }),
+export const history = createBrowserHistory();
+
+const rootReducer = combineReducers({
+  reminderReducer,
+  appReducer,
+  thotReducer,
 });
+
+export const store = configureStore({
+  reducer: rootReducer,
+});
+
+export const persistor = persistStore(store);
 
 ReactDOM.render(
   <React.StrictMode>
